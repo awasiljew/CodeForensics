@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -33,14 +34,16 @@ public class FXMLController implements Initializable {
                 .setGitDir(new File(file + "/.git"))
                 .build();
         Git git = new Git(repository);
+
         git.log().call().forEach(revCommit -> {
             System.out.println("[" + revCommit.getName() + "] " + revCommit.getAuthorIdent().getName() + " " + revCommit.getShortMessage());
-
         });
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         GitShellBindings gitShellBindings = GitShellBindings.gitShellBindings()
                 .commandExecutor(BashShellCommandExecutor.commandExecutor()
-                        .executorService(Executors.newSingleThreadExecutor())
+                        .executorService(executorService)
                         .timeout(1)
                         .timeoutTimeUnit(TimeUnit.MINUTES)
                         .workingDirectory(file.getAbsolutePath())
@@ -48,6 +51,8 @@ public class FXMLController implements Initializable {
                 .build();
 
         System.out.println("\n" + gitShellBindings.gitEvolutionLog());
+
+        executorService.shutdown();
 
     }
 

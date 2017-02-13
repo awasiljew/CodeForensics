@@ -145,6 +145,12 @@
             <version>1.7.22</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.univocity</groupId>
+            <artifactId>univocity-parsers</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
         <!-- Java Bean Support -->
         <dependency>
             <groupId>org.projectlombok</groupId>
